@@ -4,5 +4,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(),],
+  plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      // 👇 Asegura que se construyan ambas páginas
+      input: {
+        main: 'index.html',
+        laberinto: 'laberinto.html',
+      },
+    },
+  },
 })
