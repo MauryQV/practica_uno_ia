@@ -1,0 +1,25 @@
+.labyrinth-app { max-width: 920px; margin: 16px auto; font-family: system-ui, Arial; }
+h2 { margin: 8px 0 12px; }
+
+.controls { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+button { padding:8px 12px; border-radius:10px; border:1px solid #ddd; background:white; cursor:pointer; }
+button:hover { filter: brightness(0.98); }
+button.secondary { background:#f5f5f5; }
+
+.stats { margin-left:12px; display:flex; gap:16px; }
+
+.board { display:grid; gap:2px; background:#ddd; padding:2px; width:max-content; border-radius:8px; }
+.cell { width:28px; height:28px; border-radius:4px; background:white; }
+.cell.wall { background:#2e2e2e; }
+.cell.start { background:#2d7ef0; }
+.cell.goal { background:#f0b12d; }
+.cell.visited { background:#bda7ff; border:1px solid #9e86ff; }
+.cell.path { background:#7bd389; }
+
+.legend { margin-top:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.badge { display:inline-block; width:16px; height:16px; border-radius:3px; vertical-align:middle; }
+.badge.start { background:#2d7ef0; }
+.badge.goal { background:#f0b12d; }
+.badge.visited { background:#bda7ff; border:1px solid #9e86ff;  }
+.badge.path { background:#7bd389; }
+.badge.wall { background:#2e2e2e; }
