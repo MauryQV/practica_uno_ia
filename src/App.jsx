@@ -7,7 +7,7 @@ import { RotateCcw } from "lucide-react";
 import { useGameState } from "./hooks/useGameState";
 
 // Utils
-import { aiAlgorithms } from "./utils/aiAlgorithms";
+import { aiAlgorithms } from "./utils/AiAlgorithms";
 
 // Components
 import { Board } from "./components/tresEnRaya/Board";
