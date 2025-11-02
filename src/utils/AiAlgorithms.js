@@ -1,6 +1,6 @@
 // utils/aiAlgorithms.js - VERSIÓN CON ANÁLISIS DETALLADO
 
-import { gameUtils } from './GameUtils';
+import { gameUtils } from './GameUtils.js';
 
 export const aiAlgorithms = {
   // Minimax con captura de información detallada

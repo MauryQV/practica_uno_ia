@@ -4,21 +4,21 @@ import React, { useState, useEffect } from "react";
 import { RotateCcw } from "lucide-react";
 
 // Hooks
-import { useGameState } from "./hooks/useGameState";
+// Probablemente .js porque es un hook (lógica)
+import { useGameState } from "./hooks/useGameState.js";
 
-// Utils
-import { aiAlgorithms } from "./utils/AiAlgorithms";
+// Utils (lógica)
+import { aiAlgorithms } from "./utils/AiAlgorithms.js";
 
-// Components
-import { Board } from "./components/tresEnRaya/Board";
-import { GameStatus } from "./components/tresEnRaya/GameStatus";
-import { AlgorithmSelector } from "./components/tresEnRaya/AlgorithmSelector";
-import { StatsPanel } from "./components/tresEnRaya/StatsPanel";
-import { ComparisonPanel } from "./components/tresEnRaya/ComparisonPanel";
-import { Scoreboard } from "./components/tresEnRaya/ScoreBoard";
-import { InfoPanel } from "./components/tresEnRaya/InfoPanel";
-import { DetailedTreeAnalysis } from "./components/tresEnRaya/DetailedTreeAnalysis";
-
+// Components (casi seguro .jsx porque tienen HTML)
+import { Board } from "./components/tresEnRaya/Board.jsx";
+import { GameStatus } from "./components/tresEnRaya/GameStatus.jsx";
+import { AlgorithmSelector } from "./components/tresEnRaya/AlgorithmSelector.jsx";
+import { StatsPanel } from "./components/tresEnRaya/StatsPanel.jsx";
+import { ComparisonPanel } from "./components/tresEnRaya/ComparisonPanel.jsx";
+import { Scoreboard } from "./components/tresEnRaya/ScoreBoard.jsx";
+import { InfoPanel } from "./components/tresEnRaya/InfoPanel.jsx";
+import { DetailedTreeAnalysis } from "./components/tresEnRaya/DetailedTreeAnalysis.jsx";
 const TicTacToe = () => {
   const gameState = useGameState();
   const [algorithm, setAlgorithm] = useState("minimax");
