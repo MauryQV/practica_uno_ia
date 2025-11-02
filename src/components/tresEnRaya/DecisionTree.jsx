@@ -45,7 +45,7 @@ export const DecisionTree = ({ treeData, algorithm }) => {
         </div>
         <div className="flex items-center gap-2">
           <div className="text-2xl font-bold text-green-700">
-            Posición {bestMove.position + 1}
+            Posición {bestMove.position}
           </div>
           <div className="text-lg text-gray-600">→ Valor: {bestMove.value}</div>
         </div>
@@ -82,7 +82,7 @@ export const DecisionTree = ({ treeData, algorithm }) => {
                           : "bg-gray-200 text-gray-700"
                       }`}
                     >
-                      {move.position + 1}
+                      {move.position}
                     </div>
                   </div>
                 </td>

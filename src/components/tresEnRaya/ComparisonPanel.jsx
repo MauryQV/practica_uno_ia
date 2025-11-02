@@ -18,7 +18,6 @@ export const ComparisonPanel = ({ stats }) => {
   return (
     <div className="bg-linear-to-r from-purple-100 to-blue-100 rounded-xl p-6">
       <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <Zap className="w-6 h-6 text-yellow-600" />
         Eficiencia
       </h3>
       <div className="space-y-2">

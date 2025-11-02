@@ -1,7 +1,5 @@
-// hooks/useGameState.js
-
 import { useState } from 'react';
-import { gameUtils } from '../utils/GameUtils';
+import { gameUtils } from '../utils/GameUtils.js';
 
 export const useGameState = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
