@@ -204,7 +204,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                     <td colSpan="8" className="p-4 bg-gray-50">
                       <div className="text-sm">
                         <div className="font-semibold mb-2">
-                          🔍 Siguientes movimientos evaluados (MAX busca
+                          Siguientes movimientos evaluados (MAX busca
                           maximizar):
                         </div>
                         <div className="grid grid-cols-3 gap-2">

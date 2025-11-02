@@ -1,5 +1,3 @@
-// components/StatsPanel.jsx
-
 import React from "react";
 import { Activity } from "lucide-react";
 
