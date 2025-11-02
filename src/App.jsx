@@ -89,7 +89,7 @@ const TicTacToe = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold bg-black bg-clip-text text-transparent mb-2">
-            Tres en raya - Busqueda con Contrincante
+            Tres en raya - Busqueda con Contrincante-OAV
           </h1>
           <p className="text-gray-600 text-lg">
             Análisis Detallado: Minimax vs Poda Alfa-Beta
