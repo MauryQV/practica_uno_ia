@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Páginas
 import Home from './Home';
-import TicTacToe from './TicTacToe'; // Mover tu código actual a este archivo
+import TicTacToe from './TicTacToe1'; // Mover tu código actual a este archivo
 import LaberintoApp from './raton-laberinto/App';
 
 function App() {
