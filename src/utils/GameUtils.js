@@ -47,46 +47,52 @@ export const gameUtils = {
   },
 
   // NUEVA FUNCIÓN: Análisis detallado de un estado
-  analyzeState: (squares) => {
-    // Verificar si hay ganador
-    const winner = gameUtils.calculateWinner(squares);
-    if (winner) {
-      return {
-        isTerminal: true,
-        winner: winner.winner,
-        maxLines: winner.winner === 'X' ? 8 : 0,
-        minLines: winner.winner === 'O' ? 8 : 0,
-        heuristic: winner.winner === 'X' ? 1000 : -1000,
-        explanation: `${winner.winner} ha ganado`
-      };
-    }
+// utils/GameUtils.js - FIX PARA HEURÍSTICA
 
-    // Verificar empate
-    if (gameUtils.isDraw(squares)) {
-      return {
-        isTerminal: true,
-        winner: null,
-        maxLines: 0,
-        minLines: 0,
-        heuristic: 0,
-        explanation: 'Empate'
-      };
-    }
+// SOLO REEMPLAZA LA FUNCIÓN analyzeState:
 
-    // Estado no terminal: calcular heurística
-    const maxLines = gameUtils.countWinningLines(squares, 'X');
-    const minLines = gameUtils.countWinningLines(squares, 'O');
-    const heuristic = maxLines - minLines;
-
+analyzeState: (squares) => {
+  // Verificar si hay ganador
+  const winner = gameUtils.calculateWinner(squares);
+  if (winner) {
     return {
-      isTerminal: false,
-      winner: null,
-      maxLines,
-      minLines,
-      heuristic,
-      explanation: `MAX(X)=${maxLines} líneas - MIN(O)=${minLines} líneas = ${heuristic}`
+      isTerminal: true,
+      winner: winner.winner,
+      maxLines: winner.winner === 'X' ? 8 : 0,
+      minLines: winner.winner === 'O' ? 8 : 0,
+      // ✅ FIX: No usar heurística en estados terminales
+      // El valor terminal lo calcula minimaxDetailed (10/-10 con depth)
+      heuristic: 0, // No importa, no se usa en terminales
+      explanation: `${winner.winner} ha ganado`
     };
-  },
+  }
+
+  // Verificar empate
+  if (gameUtils.isDraw(squares)) {
+    return {
+      isTerminal: true,
+      winner: null,
+      maxLines: 0,
+      minLines: 0,
+      heuristic: 0,
+      explanation: 'Empate'
+    };
+  }
+
+  // ✅ Estado no terminal: AQUÍ sí se usa la heurística
+  const maxLines = gameUtils.countWinningLines(squares, 'X');
+  const minLines = gameUtils.countWinningLines(squares, 'O');
+  const heuristic = maxLines - minLines;
+
+  return {
+    isTerminal: false,
+    winner: null,
+    maxLines,
+    minLines,
+    heuristic, // Este es el f(v) = MAX - MIN que se muestra en la tabla
+    explanation: `MAX(X)=${maxLines} líneas - MIN(O)=${minLines} líneas = ${heuristic}`
+  };
+},
 
   // NUEVA FUNCIÓN: Evaluar con explicación
   evaluateWithExplanation: (squares) => {
