@@ -1,3 +1,5 @@
+// src\App.jsx
+
 // TicTacToe.jsx - VERSIÓN FINAL CON ANÁLISIS DETALLADO
 
 import React, { useState, useEffect } from "react";
@@ -11,6 +13,7 @@ import { useGameState } from "./hooks/useGameState.js";
 import { aiAlgorithms } from "./utils/AiAlgorithms.js";
 
 // Components (casi seguro .jsx porque tienen HTML)
+import { GameAnalysisSummary } from "./components/tresEnRaya/GameAnalysisSummary";
 import { Board } from "./components/tresEnRaya/Board.jsx";
 import { GameStatus } from "./components/tresEnRaya/GameStatus.jsx";
 import { AlgorithmSelector } from "./components/tresEnRaya/AlgorithmSelector.jsx";
@@ -19,16 +22,21 @@ import { ComparisonPanel } from "./components/tresEnRaya/ComparisonPanel.jsx";
 import { Scoreboard } from "./components/tresEnRaya/ScoreBoard.jsx";
 import { InfoPanel } from "./components/tresEnRaya/InfoPanel.jsx";
 import { DetailedTreeAnalysis } from "./components/tresEnRaya/DetailedTreeAnalysis.jsx";
-
 const TicTacToe = () => {
   const gameState = useGameState();
   const [algorithm, setAlgorithm] = useState("minimax");
   const [thinking, setThinking] = useState(false);
-  const [currentTreeData, setCurrentTreeData] = useState({ moves: [], selectedPosition: null });
-  // const [currentTreeData, setCurrentTreeData] = useState([]);
+  const [currentTreeData, setCurrentTreeData] = useState([]);
   const [stats, setStats] = useState({
     minimax: { nodes: 0, time: 0, moves: [] },
     alphabeta: { nodes: 0, time: 0, moves: [] },
+  });
+  const [gameStats, setGameStats] = useState({
+    totalMoves: 0,
+    totalNodes: 0,
+    totalTime: 0,
+    totalPruned: 0,
+    moves: [],
   });
 
   // IA juega su turno
@@ -48,6 +56,37 @@ const TicTacToe = () => {
           gameState.makeMove(result.move, "O");
           gameState.setIsXNext(true);
 
+          // Actualizar estadísticas acumuladas del juego
+          setGameStats((prev) => {
+            const newStats = {
+              totalMoves: prev.totalMoves + 1,
+              totalNodes: prev.totalNodes + result.nodes,
+              totalTime: prev.totalTime + parseFloat(result.time || 0),
+              totalPruned: prev.totalPruned + (result.pruned || 0),
+              moves: [
+                ...prev.moves,
+                {
+                  moveNumber: prev.totalMoves + 1,
+                  position: result.move,
+                  nodes: result.nodes,
+                  time: result.time,
+                  pruned: result.pruned || 0,
+                },
+              ],
+            };
+
+            // Calcular eficiencia de poda (solo para Alfa-Beta)
+            if (algorithm === "alphabeta" && newStats.totalNodes > 0) {
+              newStats.pruningEfficiency = (
+                (newStats.totalPruned /
+                  (newStats.totalNodes + newStats.totalPruned)) *
+                100
+              ).toFixed(1);
+            }
+
+            return newStats;
+          });
+
           // Actualizar estadísticas
           setStats((prev) => ({
             ...prev,
@@ -59,15 +98,8 @@ const TicTacToe = () => {
           }));
 
           // Guardar datos del árbol de decisión
-          // console.log("Tree Data:", result.treeData);
-          // setCurrentTreeData(result.treeData || []);
-          // Guardar datos del árbol de decisión
           console.log("Tree Data:", result.treeData);
-          console.log("Selected Move:", result.move);
-          setCurrentTreeData({
-            moves: result.treeData || [],
-            selectedPosition: result.move
-          });
+          setCurrentTreeData(result.treeData || []);
         }
 
         setThinking(false);
@@ -82,21 +114,21 @@ const TicTacToe = () => {
     }
   };
 
-  // const handleReset = () => {
-  //   gameState.resetGame();
-  //   setCurrentTreeData([]);
-  // };
   const handleReset = () => {
     gameState.resetGame();
-    setCurrentTreeData({ moves: [], selectedPosition: null });
+    setCurrentTreeData([]);
+    setGameStats({
+      totalMoves: 0,
+      totalNodes: 0,
+      totalTime: 0,
+      totalPruned: 0,
+      moves: [],
+    });
   };
-  // const handleAlgorithmChange = (newAlgorithm) => {
-  //   setAlgorithm(newAlgorithm);
-  //   setCurrentTreeData([]); // Limpiar árbol al cambiar algoritmo
-  // };
+
   const handleAlgorithmChange = (newAlgorithm) => {
     setAlgorithm(newAlgorithm);
-    setCurrentTreeData({ moves: [], selectedPosition: null });
+    setCurrentTreeData([]); // Limpiar árbol al cambiar algoritmo
   };
 
   return (
@@ -125,6 +157,13 @@ const TicTacToe = () => {
             <ComparisonPanel stats={stats} />
 
             <Scoreboard scores={gameState.gamesPlayed} />
+
+            {gameState.gameOver && gameStats?.totalMoves > 0 && (
+              <GameAnalysisSummary
+                gameStats={gameStats}
+                algorithm={algorithm}
+              />
+            )}
           </div>
 
           {/* Panel central y derecho - Tablero y análisis */}
@@ -158,58 +197,53 @@ const TicTacToe = () => {
                   Nuevo Juego
                 </button>
               </div> */}
-                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <div style={{ textAlign: "center", marginTop: "16px" }}>
                 <button
-                    onClick={handleReset}
-                    style={{
-                    padding: '12px 32px',
-                    background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
-                    color: 'white',
-                    borderRadius: '8px',
-                    fontWeight: '600',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    margin: '0 auto',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                    }}
-                    onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = '0 10px 15px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                    }}
+                  onClick={handleReset}
+                  style={{
+                    padding: "12px 32px",
+                    background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+                    color: "white",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    margin: "0 auto",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.05)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 15px rgba(0, 0, 0, 0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px rgba(0, 0, 0, 0.1)";
+                  }}
                 >
-                    <RotateCcw style={{ width: '20px', height: '20px' }} />
-                    Nuevo Juego
+                  <RotateCcw style={{ width: "20px", height: "20px" }} />
+                  Nuevo Juego
                 </button>
-                </div>
-              
+              </div>
 
               <InfoPanel />
             </div>
 
             {/* Análisis detallado del árbol de decisión */}
-            {/* {currentTreeData.length > 0 && (
+            {currentTreeData.length > 0 && (
               <DetailedTreeAnalysis
                 treeData={currentTreeData}
                 algorithm={algorithm}
               />
-            )} */}
-            {currentTreeData.moves && currentTreeData.moves.length > 0 && (
-              <DetailedTreeAnalysis
-                treeData={currentTreeData.moves}
-                algorithm={algorithm}
-                selectedPosition={currentTreeData.selectedPosition}
-              />
             )}
+
             {/* Ayuda cuando no hay árbol */}
-            {/* {currentTreeData.length === 0 && !gameState.gameOver && (
+            {currentTreeData.length === 0 && !gameState.gameOver && (
               <div className="bg-white rounded-xl  p-6">
                 <div className="text-center text-gray-500">
                   <div className="text-lg font-semibold mb-2">
@@ -218,18 +252,6 @@ const TicTacToe = () => {
                   <div className="text-sm">
                     El análisis aparecera despues de que el agente haga su
                     movimiento
-                  </div>
-                </div>
-              </div>
-            )} */}
-            {(!currentTreeData.moves || currentTreeData.moves.length === 0) && !gameState.gameOver && (
-              <div className="bg-white rounded-xl p-6">
-                <div className="text-center text-gray-500">
-                  <div className="text-lg font-semibold mb-2">
-                    Esperando el movimiento del usuario
-                  </div>
-                  <div className="text-sm">
-                    El análisis aparecerá después de que el agente haga su movimiento
                   </div>
                 </div>
               </div>
