@@ -1,15 +1,21 @@
 import React from 'react';
+// ¡PASO 1: Importar Link!
+import { Link } from 'react-router-dom';
 import { Brain, Grid3x3, Compass, Sparkles, ArrowRight, Search, Gamepad2 } from 'lucide-react';
 
 const Home = () => {
+  // ¡PASO 2: Ya no necesitamos la función navigateTo!
+  /*
   const navigateTo = (path) => {
     window.location.href = path;
   };
+  */
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       {/* Header */}
       <header className="pt-12 pb-8 px-4">
+        {/* ... (contenido del header sin cambios) ... */}
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Brain className="w-12 h-12 text-purple-600" />
@@ -31,8 +37,9 @@ const Home = () => {
         <div className="grid md:grid-cols-2 gap-8">
           
           {/* Card 1: Laberinto */}
-          <div 
-            onClick={() => navigateTo('/laberinto')} 
+          {/* ¡PASO 3: Reemplazar <div> con <Link> */}
+          <Link 
+            to="/laberinto"
             className="group cursor-pointer"
           >
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-blue-400 transform hover:-translate-y-2">
@@ -93,11 +100,12 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link> {/* ¡PASO 3: Cerrar el Link! */}
 
           {/* Card 2: Tres en Raya */}
-          <div 
-            onClick={() => navigateTo('/tresEnRaya')} 
+          {/* ¡PASO 4: Repetir para la otra card! */}
+          <Link 
+            to="/tresEnRaya"
             className="group cursor-pointer"
           >
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-purple-400 transform hover:-translate-y-2">
@@ -158,12 +166,13 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link> {/* ¡PASO 4: Cerrar el Link! */}
 
         </div>
 
         {/* Info Section */}
         <div className="mt-12 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+          {/* ... (contenido de Info Section sin cambios) ... */}
           <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
             <Brain className="w-6 h-6 text-indigo-600" />
             Objetivo del Proyecto

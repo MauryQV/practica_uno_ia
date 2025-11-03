@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/laberinto", "destination": "/laberinto.html" }
+    { "source": "/laberinto", "destination": "/laberinto.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
