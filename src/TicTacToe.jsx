@@ -1,5 +1,3 @@
-// src\App.jsx
-
 // TicTacToe.jsx - VERSIÓN FINAL CON ANÁLISIS DETALLADO
 
 import React, { useState, useEffect } from "react";
@@ -21,11 +19,13 @@ import { ComparisonPanel } from "./components/tresEnRaya/ComparisonPanel.jsx";
 import { Scoreboard } from "./components/tresEnRaya/ScoreBoard.jsx";
 import { InfoPanel } from "./components/tresEnRaya/InfoPanel.jsx";
 import { DetailedTreeAnalysis } from "./components/tresEnRaya/DetailedTreeAnalysis.jsx";
+
 const TicTacToe = () => {
   const gameState = useGameState();
   const [algorithm, setAlgorithm] = useState("minimax");
   const [thinking, setThinking] = useState(false);
-  const [currentTreeData, setCurrentTreeData] = useState([]);
+  const [currentTreeData, setCurrentTreeData] = useState({ moves: [], selectedPosition: null });
+  // const [currentTreeData, setCurrentTreeData] = useState([]);
   const [stats, setStats] = useState({
     minimax: { nodes: 0, time: 0, moves: [] },
     alphabeta: { nodes: 0, time: 0, moves: [] },
@@ -59,8 +59,15 @@ const TicTacToe = () => {
           }));
 
           // Guardar datos del árbol de decisión
+          // console.log("Tree Data:", result.treeData);
+          // setCurrentTreeData(result.treeData || []);
+          // Guardar datos del árbol de decisión
           console.log("Tree Data:", result.treeData);
-          setCurrentTreeData(result.treeData || []);
+          console.log("Selected Move:", result.move);
+          setCurrentTreeData({
+            moves: result.treeData || [],
+            selectedPosition: result.move
+          });
         }
 
         setThinking(false);
@@ -75,14 +82,21 @@ const TicTacToe = () => {
     }
   };
 
+  // const handleReset = () => {
+  //   gameState.resetGame();
+  //   setCurrentTreeData([]);
+  // };
   const handleReset = () => {
     gameState.resetGame();
-    setCurrentTreeData([]);
+    setCurrentTreeData({ moves: [], selectedPosition: null });
   };
-
+  // const handleAlgorithmChange = (newAlgorithm) => {
+  //   setAlgorithm(newAlgorithm);
+  //   setCurrentTreeData([]); // Limpiar árbol al cambiar algoritmo
+  // };
   const handleAlgorithmChange = (newAlgorithm) => {
     setAlgorithm(newAlgorithm);
-    setCurrentTreeData([]); // Limpiar árbol al cambiar algoritmo
+    setCurrentTreeData({ moves: [], selectedPosition: null });
   };
 
   return (
@@ -181,15 +195,21 @@ const TicTacToe = () => {
             </div>
 
             {/* Análisis detallado del árbol de decisión */}
-            {currentTreeData.length > 0 && (
+            {/* {currentTreeData.length > 0 && (
               <DetailedTreeAnalysis
                 treeData={currentTreeData}
                 algorithm={algorithm}
               />
+            )} */}
+            {currentTreeData.moves && currentTreeData.moves.length > 0 && (
+              <DetailedTreeAnalysis
+                treeData={currentTreeData.moves}
+                algorithm={algorithm}
+                selectedPosition={currentTreeData.selectedPosition}
+              />
             )}
-
             {/* Ayuda cuando no hay árbol */}
-            {currentTreeData.length === 0 && !gameState.gameOver && (
+            {/* {currentTreeData.length === 0 && !gameState.gameOver && (
               <div className="bg-white rounded-xl  p-6">
                 <div className="text-center text-gray-500">
                   <div className="text-lg font-semibold mb-2">
@@ -198,6 +218,18 @@ const TicTacToe = () => {
                   <div className="text-sm">
                     El análisis aparecera despues de que el agente haga su
                     movimiento
+                  </div>
+                </div>
+              </div>
+            )} */}
+            {(!currentTreeData.moves || currentTreeData.moves.length === 0) && !gameState.gameOver && (
+              <div className="bg-white rounded-xl p-6">
+                <div className="text-center text-gray-500">
+                  <div className="text-lg font-semibold mb-2">
+                    Esperando el movimiento del usuario
+                  </div>
+                  <div className="text-sm">
+                    El análisis aparecerá después de que el agente haga su movimiento
                   </div>
                 </div>
               </div>

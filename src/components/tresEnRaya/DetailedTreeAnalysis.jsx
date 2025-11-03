@@ -9,12 +9,13 @@ import {
   TrendingDown,
 } from "lucide-react";
 
-export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
+export const DetailedTreeAnalysis = ({ treeData, algorithm, selectedPosition }) => {
   const [expandedMove, setExpandedMove] = useState(null);
 
   if (!treeData || treeData.length === 0) return null;
 
-  const bestMove = treeData[0]; // Ya está ordenado
+  // Encontrar el movimiento que realmente se eligió
+  const bestMove = treeData.find(m => m.position === selectedPosition) || treeData[0];
 
   const renderMiniBoard = (position, board = null) => {
     const displayBoard = board || Array(9).fill(null);
@@ -45,7 +46,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl  p-6">
+    <div className="bg-white rounded-xl p-6">
       <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
         <Calculator className="w-6 h-6 text-purple-600" />
         Análisis Detallado -{" "}
@@ -89,12 +90,6 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
               </span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-3xl font-bold text-green-600">
-              {bestMove.value}
-            </div>
-            <div className="text-xs text-gray-500">Valor Final</div>
-          </div>
         </div>
       </div>
 
@@ -108,8 +103,8 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
               <th className="p-3 text-center">MAX(X)</th>
               <th className="p-3 text-center">MIN(O)</th>
               <th className="p-3 text-center">f(v)</th>
-              <th className="p-3 text-center">Valor</th>
-              <th className="p-3 text-center">Nodos</th>
+              {/* <th className="p-3 text-center">Valor</th>
+              <th className="p-3 text-center">Nodos</th> */}
               <th className="p-3 text-center">Detalles</th>
             </tr>
           </thead>
@@ -118,7 +113,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
               <React.Fragment key={idx}>
                 <tr
                   className={`border-b hover:bg-gray-50 transition-colors cursor-pointer ${
-                    idx === 0 ? "bg-green-50 font-semibold" : ""
+                    move.position === bestMove.position ? "bg-green-50 font-semibold" : ""
                   }`}
                   onClick={() => toggleMove(idx)}
                 >
@@ -126,7 +121,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                   <td className="p-3 text-center">
                     <div
                       className={`w-10 h-10 mx-auto rounded-lg flex items-center justify-center font-bold text-lg ${
-                        idx === 0
+                        move.position === bestMove.position
                           ? "bg-green-500 text-white"
                           : "bg-gray-200 text-gray-700"
                       }`}
@@ -166,7 +161,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                       = {move.heuristic}
                     </div>
                   </td>
-                  <td className="p-3 text-center">
+                  {/* <td className="p-3 text-center">
                     <div
                       className={`text-2xl font-bold ${
                         move.value > 0
@@ -186,7 +181,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                         {move.pruned} podados
                       </div>
                     )}
-                  </td>
+                  </td> */}
                   <td className="p-3 text-center">
                     <button className="text-blue-600 hover:text-blue-800">
                       {expandedMove === idx ? (
@@ -201,7 +196,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                 {/* Fila expandida con detalles */}
                 {expandedMove === idx && move.children && (
                   <tr>
-                    <td colSpan="8" className="p-4 bg-gray-50">
+                    <td colSpan="6" className="p-4 bg-gray-50">
                       <div className="text-sm">
                         <div className="font-semibold mb-2">
                           Siguientes movimientos evaluados (MAX busca
@@ -218,26 +213,15 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
                                   Pos {child.position}
                                 </div>
                                 <div className="flex-1"></div>
-                                <div
-                                  className={`font-bold ${
-                                    child.value > 0
-                                      ? "text-blue-600"
-                                      : child.value < 0
-                                      ? "text-red-600"
-                                      : "text-gray-600"
-                                  }`}
-                                >
-                                  {child.value}
+                                <div className="font-bold text-gray-600">
+                                  f(v) = {child.heuristic || '?'}
                                 </div>
                               </div>
                             </div>
                           ))}
                         </div>
                         <div className="mt-2 text-xs text-gray-600">
-                          MIN elige el <strong>mínimo</strong> de estos valores:
-                          <span className="font-bold text-green-600 ml-1">
-                            {Math.min(...move.children.map((c) => c.value))}
-                          </span>
+                          MIN elige el movimiento con la <strong>heurística más negativa</strong>
                         </div>
                       </div>
                     </td>
@@ -252,8 +236,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
       {/* Interpretación final */}
       <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <div className="font-semibold mb-2">
-          {" "}
-          Interpretacion de ls movimientos:
+          Interpretación de los movimientos:
         </div>
         <div className="text-sm space-y-1 text-gray-700">
           <div>
@@ -270,7 +253,7 @@ export const DetailedTreeAnalysis = ({ treeData, algorithm }) => {
           </div>
           <div>
             • <strong>f(v) positivo:</strong> Ventaja para MAX (X) - Malo para
-            el agente.
+            el agente
           </div>
         </div>
       </div>

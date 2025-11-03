@@ -199,17 +199,17 @@ export const aiAlgorithms = {
     }
   },
 
-  // Encontrar mejor movimiento con análisis completo
+// Encontrar el mejor movimiento con análisis detallado
   findBestMove: (squares, algorithm) => {
     const stats = { 
       nodes: 0, 
       pruned: 0,
-      evaluations: []  // Array con TODA la información de cada nodo
+      evaluations: []
     };
     
     const startTime = performance.now();
     let bestMove = -1;
-    let bestVal = Infinity;
+    let bestVal = Infinity;  // ✅ CORRECTO: MIN busca minimizar
     const rootMoves = [];
 
     // Evaluar cada movimiento posible
@@ -239,7 +239,7 @@ export const aiAlgorithms = {
               0, 
               -Infinity, 
               Infinity, 
-              true,  // Siguiente es MAX (X)
+              true,
               moveStats,
               [{ pos: i, player: 'O' }]
             );
@@ -265,16 +265,24 @@ export const aiAlgorithms = {
         stats.pruned += moveStats.pruned;
         stats.evaluations.push(...moveStats.evaluations);
 
+        // ✅ FIX PRINCIPAL: MIN elige el MENOR valor, con heurística como desempate
         if (moveVal < bestVal) {
           bestMove = i;
           bestVal = moveVal;
+        } else if (moveVal === bestVal) {
+          // Si hay empate, usar la heurística como desempate
+          // MIN prefiere heurística MÁS NEGATIVA
+          const currentBestMove = rootMoves.find(m => m.position === bestMove);
+          if (!currentBestMove || stateAnalysis.heuristic < currentBestMove.heuristic) {
+            bestMove = i;
+          }
         }
       }
     }
 
     const endTime = performance.now();
 
-    // Ordenar por valor (mejor primero para MIN)
+    // ✅ Ordenar ASCENDENTE: el menor valor primero (mejor para MIN)
     rootMoves.sort((a, b) => a.value - b.value);
 
     return {
@@ -283,7 +291,7 @@ export const aiAlgorithms = {
       time: (endTime - startTime).toFixed(2),
       pruned: stats.pruned,
       treeData: rootMoves,
-      fullTree: stats.evaluations  // NUEVO: árbol completo con todos los detalles
+      fullTree: stats.evaluations
     };
   }
 };
