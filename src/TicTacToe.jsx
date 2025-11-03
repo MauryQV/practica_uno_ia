@@ -13,6 +13,7 @@ import { useGameState } from "./hooks/useGameState.js";
 import { aiAlgorithms } from "./utils/AiAlgorithms.js";
 
 // Components (casi seguro .jsx porque tienen HTML)
+import { GameAnalysisSummary } from "./components/tresEnRaya/GameAnalysisSummary";
 import { Board } from "./components/tresEnRaya/Board.jsx";
 import { GameStatus } from "./components/tresEnRaya/GameStatus.jsx";
 import { AlgorithmSelector } from "./components/tresEnRaya/AlgorithmSelector.jsx";
@@ -29,6 +30,13 @@ const TicTacToe = () => {
   const [stats, setStats] = useState({
     minimax: { nodes: 0, time: 0, moves: [] },
     alphabeta: { nodes: 0, time: 0, moves: [] },
+  });
+  const [gameStats, setGameStats] = useState({
+    totalMoves: 0,
+    totalNodes: 0,
+    totalTime: 0,
+    totalPruned: 0,
+    moves: [],
   });
 
   // IA juega su turno
@@ -47,6 +55,37 @@ const TicTacToe = () => {
           // Hacer el movimiento
           gameState.makeMove(result.move, "O");
           gameState.setIsXNext(true);
+
+          // Actualizar estadísticas acumuladas del juego
+          setGameStats((prev) => {
+            const newStats = {
+              totalMoves: prev.totalMoves + 1,
+              totalNodes: prev.totalNodes + result.nodes,
+              totalTime: prev.totalTime + parseFloat(result.time || 0),
+              totalPruned: prev.totalPruned + (result.pruned || 0),
+              moves: [
+                ...prev.moves,
+                {
+                  moveNumber: prev.totalMoves + 1,
+                  position: result.move,
+                  nodes: result.nodes,
+                  time: result.time,
+                  pruned: result.pruned || 0,
+                },
+              ],
+            };
+
+            // Calcular eficiencia de poda (solo para Alfa-Beta)
+            if (algorithm === "alphabeta" && newStats.totalNodes > 0) {
+              newStats.pruningEfficiency = (
+                (newStats.totalPruned /
+                  (newStats.totalNodes + newStats.totalPruned)) *
+                100
+              ).toFixed(1);
+            }
+
+            return newStats;
+          });
 
           // Actualizar estadísticas
           setStats((prev) => ({
@@ -78,6 +117,13 @@ const TicTacToe = () => {
   const handleReset = () => {
     gameState.resetGame();
     setCurrentTreeData([]);
+    setGameStats({
+      totalMoves: 0,
+      totalNodes: 0,
+      totalTime: 0,
+      totalPruned: 0,
+      moves: [],
+    });
   };
 
   const handleAlgorithmChange = (newAlgorithm) => {
@@ -111,6 +157,13 @@ const TicTacToe = () => {
             <ComparisonPanel stats={stats} />
 
             <Scoreboard scores={gameState.gamesPlayed} />
+
+            {gameState.gameOver && gameStats?.totalMoves > 0 && (
+              <GameAnalysisSummary
+                gameStats={gameStats}
+                algorithm={algorithm}
+              />
+            )}
           </div>
 
           {/* Panel central y derecho - Tablero y análisis */}
@@ -144,38 +197,39 @@ const TicTacToe = () => {
                   Nuevo Juego
                 </button>
               </div> */}
-                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <div style={{ textAlign: "center", marginTop: "16px" }}>
                 <button
-                    onClick={handleReset}
-                    style={{
-                    padding: '12px 32px',
-                    background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
-                    color: 'white',
-                    borderRadius: '8px',
-                    fontWeight: '600',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    margin: '0 auto',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                    }}
-                    onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = '0 10px 15px rgba(0, 0, 0, 0.2)';
-                    }}
-                    onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                    }}
+                  onClick={handleReset}
+                  style={{
+                    padding: "12px 32px",
+                    background: "linear-gradient(to right, #2563eb, #1d4ed8)",
+                    color: "white",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    margin: "0 auto",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.05)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 15px rgba(0, 0, 0, 0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px rgba(0, 0, 0, 0.1)";
+                  }}
                 >
-                    <RotateCcw style={{ width: '20px', height: '20px' }} />
-                    Nuevo Juego
+                  <RotateCcw style={{ width: "20px", height: "20px" }} />
+                  Nuevo Juego
                 </button>
-                </div>
-              
+              </div>
 
               <InfoPanel />
             </div>
