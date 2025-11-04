@@ -1,104 +1,134 @@
-# React + Vite
+# 🎮 Raton y el queso y Tres en Raya - Instrucciones de Uso
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Práctica - Primer Parcial**
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Demostración en Línea
 
-## React Compiler
+**Ver el proyecto funcionando**: [https://practica-uno-ia.vercel.app/]
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+> **Nota**: Puedes probar el proyecto directamente desde el navegador sin necesidad de instalación local.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-#  Práctica IA - Algoritmos de Búsqueda
+## Instalación y Ejecución Local
 
-Implementación de algoritmos de búsqueda e inteligencia artificial aplicados a problemas clásicos.
+### Requisitos Previos
 
+Antes de comenzar, asegúrate de tener instalado:
 
-##  Instalación y Configuración
+- **Node.js** (versión 16 o superior)
 
-### Prerequisitos
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
+  - Descargar desde: [https://nodejs.org/](https://nodejs.org/)
+  - Verificar instalación: `node --version`
+
+- **npm** (se instala automáticamente con Node.js)
+  - Verificar instalación: `npm --version`
 
 ### Pasos de Instalación
 
-1. **Clonar el repositorio**
-```bash
-git clone https://github.com/MauryQV/practica_uno_ia.git
-cd practica_uno_ia.git
-```
-
-2. **Crear entorno virtual**
-```bash
-# Windows
-python -m venv venv
-
-# Linux/Mac
-python3 -m venv venv
-```
-
-3. **Activar el entorno virtual**
-```bash
-# Windows
-venv\Scripts\activate
-
-# Linux/Mac
-source venv/bin/activate
-```
-
-4. **Instalar dependencias**
-```bash
-pip install -r requirements.txt
-```
-
-##  Ejecución
-
-Una vez configurado el entorno, ejecuta la aplicación principal:
-
-```bash
-python app.py
-```
-
-Se abrirá un menú interactivo donde podrás:
-- Seleccionar el problema a resolver (Grupo 1 o Grupo 2)
-- Elegir el algoritmo de búsqueda a utilizar
-- Visualizar la solución en tiempo real
-- Comparar resultados entre diferentes algoritmos
-
-##  Tecnologías Utilizadas
-
-- **Python 3.12** - Lenguaje de programación
-- **Pygame** - Interfaz gráfica y visualización
-- **NumPy** - Operaciones con matrices y estructuras de datos
-- **Matplotlib** - Generación de gráficas comparativas
-
-##  Estructura del Proyecto
+#### 1. Descomprimir el proyecto
 
 ```
-practica_uno_ia/
-│
-├── app.py                    # Aplicación principal con menú
-├── requirements.txt          # Dependencias del proyecto
-├── README.md                 # Este archivo
-│
-├── problemas/
-│   ├── problema1/           # Implementación del laberinto
-│   └── problema2/        # Implementación del tres en raya
-│
-└── utils/                   # Utilidades y helpers
+# Si está en un archivo .zip
+Descomprime el archivo en la ubicación deseada
 ```
 
-##  Evaluación de Algoritmos
+#### 2. Abrir terminal en la carpeta del proyecto
 
-El proyecto incluye métricas de evaluación para cada algoritmo:
-- Tiempo de ejecución
-- Nodos explorados
-- Longitud de la solución
-- Uso de memoria
-- Optimalidad de la solución
+```
+# Navega a la carpeta del proyecto
+cd ruta/donde/descomprimiste/Practica-Primer-Parcial
+```
+
+#### 3. Instalar dependencias
+
+```
+# Ejecuta este comando (tomará unos minutos)
+npm install
+```
+
+> **Importante**: Este comando descargará todas las dependencias necesarias (~300MB). Es normal que tarde unos minutos.
+
+#### 4. Ejecutar el proyecto
+
+```
+# Inicia el servidor de desarrollo
+npm run dev
+```
+
+#### 5. Abrir en el navegador
+
+Después de ejecutar el comando anterior, verás algo como:
+
+```
+VITE v5.x.x  ready in xxx ms
+
+➜  Local:   http://localhost:5173/
+➜  Network: use --host to expose
+```
+
+**Abre tu navegador** y ve a: `http://localhost:5173/`
+
+---
+
+## Detener el Proyecto
+
+Para detener el servidor de desarrollo:
+
+# En la terminal, presiona:
+
+Ctrl + C
+
+```
+
+---
+
+## Contenido del CD/Carpeta
+
+```
+
+Practica-Primer-Parcial/
+├── src/ # Código fuente
+├── public/ # Archivos estáticos
+├── package.json # Dependencias del proyecto
+├── README.md # Este archivo
+└── [otros archivos de configuración]
+
+```
+
+
+---
+
+##  Solución de Problemas Comunes
+
+### Error: "node no se reconoce como comando"
+**Solución**: Instala Node.js desde [nodejs.org](https://nodejs.org/)
+
+### Error: "Cannot find module..."
+**Solución**: Ejecuta nuevamente `npm install`
+
+### Error: "Puerto 5173 en uso"
+**Solución**: Cierra otras aplicaciones que usen ese puerto o cambia el puerto en `vite.config.js`
+
+### La página no carga o muestra error
+**Solución**:
+1. Detén el servidor (Ctrl+C)
+2. Ejecuta `npm install` nuevamente
+3. Ejecuta `npm run dev`
+
+---
+
+
+
+---
+
+##  Documentación Adicional
+
+Para más información sobre los algoritmos implementados y el análisis técnico, consulte el código fuente en la carpeta `src/` o revisar el informe....
+
+---
+
+**Última actualización**: Noviembre 2025
+```
